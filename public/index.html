@@ -49,7 +49,7 @@
         
         <div id="page-dashboard" class="page-content active space-y-6">
           <div id="dash-equation" class="rounded-xl border-2 p-4 flex items-center gap-3"></div>
-          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4 hidden" id="dash-cards">
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-up" class="h-5 w-5 text-primary mb-2"></i><p class="text-[11px] text-muted-foreground">Total Harta</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-harta">Rp 0</p></div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-down" class="h-5 w-5 text-destructive mb-2"></i><p class="text-[11px] text-muted-foreground">Total Utang</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-utang">Rp 0</p></div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="dollar-sign" class="h-5 w-5 text-success mb-2"></i><p class="text-[11px] text-muted-foreground">Total Modal</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-modal">Rp 0</p></div>
@@ -57,14 +57,22 @@
           </div>
           <div class="grid md:grid-cols-2 gap-4">
             <div class="bg-card rounded-xl border p-4 shadow-sm space-y-3">
-              <h3 class="font-semibold text-sm">Komposisi Harta</h3>
-              <div class="space-y-2">
-                <div class="flex justify-between py-2 border-b border-border"><div class="flex gap-2"><i data-lucide="wallet" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Kas</span></div><span class="text-sm font-semibold" id="dash-kas">Rp 0</span></div>
-                <div class="flex justify-between py-2 border-b border-border"><div class="flex gap-2"><i data-lucide="package" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Perlengkapan</span></div><span class="text-sm font-semibold" id="dash-perlengkapan">Rp 0</span></div>
-                <div class="flex justify-between py-2"><div class="flex gap-2"><i data-lucide="monitor" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Peralatan</span></div><span class="text-sm font-semibold" id="dash-peralatan">Rp 0</span></div>
+              <h3 class="font-semibold text-sm mb-4">Komposisi Harta</h3>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between pb-4 border-b border-border"><div class="flex items-center gap-3"><i data-lucide="wallet" class="h-5 w-5 text-muted-foreground"></i><span class="text-sm font-medium">Kas</span></div><span class="text-sm font-bold" id="dash-kas">Rp 0</span></div>
+                <div class="flex items-center justify-between pb-4 border-b border-border"><div class="flex items-center gap-3"><i data-lucide="package" class="h-5 w-5 text-muted-foreground"></i><span class="text-sm font-medium">Perlengkapan</span></div><span class="text-sm font-bold" id="dash-perlengkapan">Rp 0</span></div>
+                <div class="flex items-center justify-between pb-2"><div class="flex items-center gap-3"><i data-lucide="monitor" class="h-5 w-5 text-muted-foreground"></i><span class="text-sm font-medium">Peralatan</span></div><span class="text-sm font-bold" id="dash-peralatan">Rp 0</span></div>
               </div>
             </div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><h3 class="font-semibold text-sm mb-4">Grafik Harta</h3><canvas id="hartaChart" style="max-height: 200px; width: 100%;"></canvas></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mt-4">
+            <a href="#transaksi" class="touch-target bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-sm">
+              <i data-lucide="plus" class="h-5 w-5"></i> Tambah Transaksi
+            </a>
+            <a href="#laporan" class="touch-target bg-card border border-border hover:bg-muted text-foreground font-medium text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-sm">
+              <i data-lucide="file-text" class="h-5 w-5"></i> Lihat Laporan
+            </a>
           </div>
         </div>
 
@@ -173,8 +181,12 @@
       document.getElementById('dash-peralatan').innerText = formatRp(data.detail.peralatan);
       
       const eqEl = document.getElementById('dash-equation');
-      eqEl.className = `rounded-xl border-2 p-4 flex items-center gap-3 ${data.seimbang ? 'border-success/50 bg-success/10' : 'border-destructive/50 bg-destructive/10'}`;
-      eqEl.innerHTML = `<i data-lucide="${data.seimbang ? 'check-circle' : 'x-circle'}" class="h-8 w-8 ${data.seimbang ? 'text-success' : 'text-destructive'} shrink-0"></i><div><p class="font-semibold text-sm">Persamaan Akuntansi</p><p class="text-xs text-muted-foreground">Harta (${formatRp(data.totalHarta)}) = Utang (${formatRp(data.totalUtang)}) + Modal (${formatRp(data.totalModal)})</p><p class="text-xs font-bold mt-1 ${data.seimbang ? 'text-success' : 'text-destructive'}">${data.seimbang ? '✅ Seimbang' : '❌ Tidak Seimbang'}</p></div>`;
+      if (!data.seimbang && data.jumlahTransaksi > 0) {
+        eqEl.className = `rounded-xl border-2 p-4 flex items-center gap-3 border-destructive/50 bg-destructive/10 mb-4`;
+        eqEl.innerHTML = `<i data-lucide="x-circle" class="h-8 w-8 text-destructive shrink-0"></i><div><p class="font-semibold text-sm">Persamaan Akuntansi</p><p class="text-xs font-bold mt-1 text-destructive">❌ Tidak Seimbang</p></div>`;
+      } else {
+        eqEl.className = 'hidden';
+      }
       lucide.createIcons();
       renderChart(data.detail);
     }
@@ -183,7 +195,7 @@
       if (chartInstance) chartInstance.destroy();
       const ctx = document.getElementById('hartaChart').getContext('2d'), isDark = document.documentElement.classList.contains('dark'), textColor = isDark ? '#f1f5f9' : '#0f172a';
       chartInstance = new Chart(ctx, {
-        type: 'bar', data: { labels: ['Kas', 'Perlengkapan', 'Peralatan'], datasets: [{ data: [detail.kas, detail.perlengkapan, detail.peralatan], backgroundColor: ['hsl(217, 91%, 50%)', 'hsl(142, 76%, 36%)', 'hsl(38, 92%, 50%)'], borderRadius: 6 }] },
+        type: 'bar', data: { labels: ['Kas', 'Perlengkapan', 'Peralatan'], datasets: [{ data: [detail.kas, detail.perlengkapan, detail.peralatan], backgroundColor: ['#2563eb', '#16a34a', '#eab308'], borderRadius: [8, 8, 0, 0] }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: textColor, callback: v => `${(v/1000000).toFixed(0)}jt` }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }, x: { ticks: { color: textColor }, grid: { display: false } } } }
       });
     }
@@ -193,7 +205,7 @@
       const isPos = val > 0, num = (Math.abs(val) / 1000000).toFixed(1);
       return `<span class="font-medium ${isPos ? 'text-success' : 'text-destructive'}">${isPos ? '+' : '-'}${num}jt</span>`;
     };
-    const getBgClass = (val) => (!val || val === 0) ? 'bg-muted/30' : (val > 0 ? 'bg-success/10' : 'bg-destructive/10');
+    const getBgClass = (val) => (!val || val === 0) ? 'bg-muted/10' : (val > 0 ? 'bg-success/10' : 'bg-destructive/10');
 
     async function loadTransaksi() {
       semuaTransaksi = await (await fetch(`${baseUrl}/transaksi`)).json();
@@ -206,12 +218,12 @@
             <div><h4 class="font-bold text-base text-foreground">${t.keterangan}</h4><p class="text-xs text-muted-foreground mt-0.5">${t.tanggal}</p></div>
             <div class="flex gap-2"><button onclick="editTransaksi(${t.id})" class="text-muted-foreground hover:text-primary"><i data-lucide="pencil" class="h-4 w-4"></i></button><button onclick="hapusTransaksi(${t.id})" class="text-muted-foreground hover:text-destructive"><i data-lucide="trash-2" class="h-4 w-4"></i></button></div>
           </div>
-          <div class="grid grid-cols-3 gap-2 text-center text-xs">
-            <div class="rounded-lg py-2 ${getBgClass(t.kas)}"><span class="block text-muted-foreground mb-1">Kas</span>${formatJtStr(t.kas)}</div>
-            <div class="rounded-lg py-2 ${getBgClass(t.perlengkapan)}"><span class="block text-muted-foreground mb-1">Perlengkapan</span>${formatJtStr(t.perlengkapan)}</div>
-            <div class="rounded-lg py-2 ${getBgClass(t.peralatan)}"><span class="block text-muted-foreground mb-1">Peralatan</span>${formatJtStr(t.peralatan)}</div>
-            <div class="rounded-lg py-2 ${getBgClass(t.utangUsaha)}"><span class="block text-muted-foreground mb-1">Utang</span>${formatJtStr(t.utangUsaha)}</div>
-            <div class="rounded-lg py-2 ${getBgClass(t.modal)}"><span class="block text-muted-foreground mb-1">Modal</span>${formatJtStr(t.modal)}</div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-xs">
+            <div class="rounded-xl py-2.5 ${getBgClass(t.kas)}"><span class="block text-muted-foreground mb-1">Kas</span>${formatJtStr(t.kas)}</div>
+            <div class="rounded-xl py-2.5 ${getBgClass(t.perlengkapan)}"><span class="block text-muted-foreground mb-1">Perlengkapan</span>${formatJtStr(t.perlengkapan)}</div>
+            <div class="rounded-xl py-2.5 ${getBgClass(t.peralatan)}"><span class="block text-muted-foreground mb-1">Peralatan</span>${formatJtStr(t.peralatan)}</div>
+            <div class="rounded-xl py-2.5 ${getBgClass(t.utangUsaha)}"><span class="block text-muted-foreground mb-1">Utang</span>${formatJtStr(t.utangUsaha)}</div>
+            <div class="rounded-xl py-2.5 ${getBgClass(t.modal)}"><span class="block text-muted-foreground mb-1">Modal</span>${formatJtStr(t.modal)}</div>
           </div>
         </div>
       `).join('');
