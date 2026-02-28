@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Akuntansi LKS Modern</title>
+  <meta name="author" content="SANN404 FORUM" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            border: "hsl(var(--border))", background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            primary: "hsl(var(--primary))", destructive: "hsl(var(--destructive))",
+            success: "hsl(var(--success))", warning: "hsl(var(--warning))",
+            muted: "hsl(var(--muted))", card: "hsl(var(--card))",
+            sidebar: {
+              DEFAULT: "hsl(var(--sidebar-background))", foreground: "hsl(var(--sidebar-foreground))",
+              primary: "hsl(var(--sidebar-primary))", accent: "hsl(var(--sidebar-accent))"
+            }
+          },
+          borderRadius: { xl: "var(--radius)", lg: "var(--radius)", md: "calc(var(--radius) - 2px)" }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="antialiased text-sm">
+
+  <div class="min-h-screen flex">
+    <aside class="hidden md:flex w-64 bg-sidebar text-sidebar-foreground border-r border-border flex-col fixed h-full z-30">
+      <div class="p-6 border-b border-sidebar-accent">
+        <h1 class="text-xl font-bold text-sidebar-primary">📊 Akuntansi LKS</h1>
+        <p class="text-xs text-sidebar-foreground/60 mt-1">Sistem Perhitungan Modern</p>
+      </div>
+      <nav class="flex-1 p-4 space-y-1" id="desktop-nav"></nav>
+      <div class="p-4 border-t border-sidebar-accent">
+        <button onclick="toggleTheme()" class="touch-target p-2 rounded-md hover:bg-sidebar-accent transition"><i data-lucide="moon" id="theme-icon-desktop"></i></button>
+      </div>
+    </aside>
+
+    <main class="flex-1 md:ml-64 pb-20 md:pb-0">
+      <header class="sticky top-0 z-20 bg-background/80 backdrop-blur-lg border-b border-border px-4 md:px-8 py-4 flex items-center justify-between">
+        <h2 class="text-lg font-bold" id="page-title">Dashboard</h2>
+        <button onclick="toggleTheme()" class="md:hidden touch-target p-2 rounded-md"><i data-lucide="moon" id="theme-icon-mobile"></i></button>
+      </header>
+
+      <div class="p-4 md:p-8 max-w-6xl mx-auto" id="app-container">
+        
+        <div id="page-dashboard" class="page-content active space-y-6">
+          <div id="dash-equation" class="rounded-xl border-2 p-4 flex items-center gap-3"></div>
+          
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-up" class="h-5 w-5 text-primary mb-2"></i><p class="text-[11px] text-muted-foreground">Total Harta</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-harta">Rp 0</p></div>
+            <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-down" class="h-5 w-5 text-destructive mb-2"></i><p class="text-[11px] text-muted-foreground">Total Utang</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-utang">Rp 0</p></div>
+            <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="dollar-sign" class="h-5 w-5 text-success mb-2"></i><p class="text-[11px] text-muted-foreground">Total Modal</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-modal">Rp 0</p></div>
+            <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="file-text" class="h-5 w-5 text-warning mb-2"></i><p class="text-[11px] text-muted-foreground">Transaksi</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-count">0</p></div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-card rounded-xl border p-4 shadow-sm space-y-3">
+              <h3 class="font-semibold text-sm">Komposisi Harta</h3>
+              <div class="space-y-2">
+                <div class="flex justify-between py-2 border-b border-border"><div class="flex gap-2"><i data-lucide="wallet" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Kas</span></div><span class="text-sm font-semibold" id="dash-kas">Rp 0</span></div>
+                <div class="flex justify-between py-2 border-b border-border"><div class="flex gap-2"><i data-lucide="package" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Perlengkapan</span></div><span class="text-sm font-semibold" id="dash-perlengkapan">Rp 0</span></div>
+                <div class="flex justify-between py-2"><div class="flex gap-2"><i data-lucide="monitor" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Peralatan</span></div><span class="text-sm font-semibold" id="dash-peralatan">Rp 0</span></div>
+              </div>
+            </div>
+            
+            <div class="bg-card rounded-xl border p-4 shadow-sm">
+              <h3 class="font-semibold text-sm mb-4">Grafik Harta</h3>
+              <canvas id="hartaChart" style="max-height: 200px; width: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-laporan" class="page-content space-y-4">
+          <div class="flex gap-2">
+            <button onclick="exportJSON()" class="flex-1 touch-target bg-card border hover:bg-muted text-foreground font-medium py-2 rounded-md flex items-center justify-center gap-2 transition"><i data-lucide="download" class="h-4 w-4"></i> Export JSON</button>
+            <button onclick="resetData()" class="touch-target bg-destructive hover:bg-destructive/90 text-white font-medium px-4 py-2 rounded-md flex items-center justify-center gap-2 transition"><i data-lucide="rotate-ccw" class="h-4 w-4"></i> Reset</button>
+          </div>
+          
+          <div class="bg-card border rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-muted text-muted-foreground border-b border-border">
+                  <tr>
+                    <th class="p-3 font-medium">No</th><th class="p-3 font-medium">Keterangan</th>
+                    <th class="p-3 font-medium text-right">Kas</th><th class="p-3 font-medium text-right">Perlengkapan</th>
+                    <th class="p-3 font-medium text-right">Peralatan</th><th class="p-3 font-medium text-right">Utang Usaha</th>
+                    <th class="p-3 font-medium text-right">Modal</th>
+                  </tr>
+                </thead>
+                <tbody id="laporan-body" class="divide-y divide-border"></tbody>
+                <tfoot id="laporan-footer" class="bg-muted/50 border-t-2 border-border"></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-lg border-t border-border flex justify-around py-2 px-2 pb-safe" id="mobile-nav"></nav>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
