@@ -3,31 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Akuntansi LKS Modern</title>
+  <title>Akuntansi LKS</title>
   <meta name="author" content="SANN404 FORUM" />
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#1e293b">
-  
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            border: "hsl(var(--border))", background: "hsl(var(--background))",
-            foreground: "hsl(var(--foreground))",
-            primary: "hsl(var(--primary))", destructive: "hsl(var(--destructive))",
-            success: "hsl(var(--success))", warning: "hsl(var(--warning))",
-            muted: "hsl(var(--muted))", card: "hsl(var(--card))",
-            sidebar: {
-              DEFAULT: "hsl(var(--sidebar-background))", foreground: "hsl(var(--sidebar-foreground))",
-              primary: "hsl(var(--sidebar-primary))", accent: "hsl(var(--sidebar-accent))"
-            }
+            border: "hsl(var(--border))", input: "hsl(var(--input))", background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))", primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+            destructive: "hsl(var(--destructive))", success: "hsl(var(--success))", warning: "hsl(var(--warning))",
+            muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" }, card: "hsl(var(--card))",
+            sidebar: { DEFAULT: "hsl(var(--sidebar-background))", foreground: "hsl(var(--sidebar-foreground))", primary: "hsl(var(--sidebar-primary))", accent: "hsl(var(--sidebar-accent))" }
           },
           borderRadius: { xl: "var(--radius)", lg: "var(--radius)", md: "calc(var(--radius) - 2px)" }
         }
@@ -36,37 +28,33 @@
   </script>
 </head>
 <body class="antialiased text-sm">
-
   <div class="min-h-screen flex">
     <aside class="hidden md:flex w-64 bg-sidebar text-sidebar-foreground border-r border-border flex-col fixed h-full z-30">
       <div class="p-6 border-b border-sidebar-accent">
         <h1 class="text-xl font-bold text-sidebar-primary">📊 Akuntansi LKS</h1>
-        <p class="text-xs text-sidebar-foreground/60 mt-1">Sistem Perhitungan Modern</p>
       </div>
       <nav class="flex-1 p-4 space-y-1" id="desktop-nav"></nav>
       <div class="p-4 border-t border-sidebar-accent">
-        <button onclick="toggleTheme()" class="touch-target p-2 rounded-md hover:bg-sidebar-accent transition"><i data-lucide="moon" id="theme-icon-desktop"></i></button>
+        <button onclick="toggleTheme()" class="touch-target p-2 rounded-md hover:bg-sidebar-accent transition"><i data-lucide="moon"></i></button>
       </div>
     </aside>
 
     <main class="flex-1 md:ml-64 pb-20 md:pb-0">
       <header class="sticky top-0 z-20 bg-background/80 backdrop-blur-lg border-b border-border px-4 md:px-8 py-4 flex items-center justify-between">
         <h2 class="text-lg font-bold" id="page-title">Dashboard</h2>
-        <button onclick="toggleTheme()" class="md:hidden touch-target p-2 rounded-md"><i data-lucide="moon" id="theme-icon-mobile"></i></button>
+        <button onclick="toggleTheme()" class="md:hidden touch-target p-2 rounded-md"><i data-lucide="moon"></i></button>
       </header>
 
       <div class="p-4 md:p-8 max-w-6xl mx-auto" id="app-container">
         
         <div id="page-dashboard" class="page-content active space-y-6">
           <div id="dash-equation" class="rounded-xl border-2 p-4 flex items-center gap-3"></div>
-          
           <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-up" class="h-5 w-5 text-primary mb-2"></i><p class="text-[11px] text-muted-foreground">Total Harta</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-harta">Rp 0</p></div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="trending-down" class="h-5 w-5 text-destructive mb-2"></i><p class="text-[11px] text-muted-foreground">Total Utang</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-utang">Rp 0</p></div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="dollar-sign" class="h-5 w-5 text-success mb-2"></i><p class="text-[11px] text-muted-foreground">Total Modal</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-modal">Rp 0</p></div>
             <div class="bg-card rounded-xl border p-4 shadow-sm"><i data-lucide="file-text" class="h-5 w-5 text-warning mb-2"></i><p class="text-[11px] text-muted-foreground">Transaksi</p><p class="text-sm font-bold mt-0.5 truncate" id="dash-count">0</p></div>
           </div>
-
           <div class="grid md:grid-cols-2 gap-4">
             <div class="bg-card rounded-xl border p-4 shadow-sm space-y-3">
               <h3 class="font-semibold text-sm">Komposisi Harta</h3>
@@ -76,12 +64,13 @@
                 <div class="flex justify-between py-2"><div class="flex gap-2"><i data-lucide="monitor" class="h-4 w-4 text-muted-foreground"></i><span class="text-sm">Peralatan</span></div><span class="text-sm font-semibold" id="dash-peralatan">Rp 0</span></div>
               </div>
             </div>
-            
-            <div class="bg-card rounded-xl border p-4 shadow-sm">
-              <h3 class="font-semibold text-sm mb-4">Grafik Harta</h3>
-              <canvas id="hartaChart" style="max-height: 200px; width: 100%;"></canvas>
-            </div>
+            <div class="bg-card rounded-xl border p-4 shadow-sm"><h3 class="font-semibold text-sm mb-4">Grafik Harta</h3><canvas id="hartaChart" style="max-height: 200px; width: 100%;"></canvas></div>
           </div>
+        </div>
+
+        <div id="page-transaksi" class="page-content space-y-4">
+          <button onclick="openModal()" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 touch-target transition shadow-sm mb-2"><i data-lucide="plus" class="h-5 w-5"></i> Tambah Transaksi</button>
+          <div id="transaksi-list" class="space-y-4 pb-4"></div>
         </div>
 
         <div id="page-laporan" class="page-content space-y-4">
@@ -89,17 +78,11 @@
             <button onclick="exportJSON()" class="flex-1 touch-target bg-card border hover:bg-muted text-foreground font-medium py-2 rounded-md flex items-center justify-center gap-2 transition"><i data-lucide="download" class="h-4 w-4"></i> Export JSON</button>
             <button onclick="resetData()" class="touch-target bg-destructive hover:bg-destructive/90 text-white font-medium px-4 py-2 rounded-md flex items-center justify-center gap-2 transition"><i data-lucide="rotate-ccw" class="h-4 w-4"></i> Reset</button>
           </div>
-          
           <div class="bg-card border rounded-xl shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-left text-sm whitespace-nowrap">
                 <thead class="bg-muted text-muted-foreground border-b border-border">
-                  <tr>
-                    <th class="p-3 font-medium">No</th><th class="p-3 font-medium">Keterangan</th>
-                    <th class="p-3 font-medium text-right">Kas</th><th class="p-3 font-medium text-right">Perlengkapan</th>
-                    <th class="p-3 font-medium text-right">Peralatan</th><th class="p-3 font-medium text-right">Utang Usaha</th>
-                    <th class="p-3 font-medium text-right">Modal</th>
-                  </tr>
+                  <tr><th class="p-3 font-medium">No</th><th class="p-3 font-medium">Keterangan</th><th class="p-3 font-medium text-right">Kas</th><th class="p-3 font-medium text-right">Perlengkapan</th><th class="p-3 font-medium text-right">Peralatan</th><th class="p-3 font-medium text-right">Utang Usaha</th><th class="p-3 font-medium text-right">Modal</th></tr>
                 </thead>
                 <tbody id="laporan-body" class="divide-y divide-border"></tbody>
                 <tfoot id="laporan-footer" class="bg-muted/50 border-t-2 border-border"></tfoot>
@@ -114,6 +97,169 @@
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-lg border-t border-border flex justify-around py-2 px-2 pb-safe" id="mobile-nav"></nav>
   </div>
 
-  <script src="/app.js"></script>
+  <div id="modal-transaksi" class="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-card border border-border rounded-xl shadow-lg w-full max-w-md flex flex-col max-h-[90vh]">
+      <div class="p-4 border-b border-border flex justify-between items-center">
+        <h3 class="font-bold text-lg" id="modal-title">Tambah Transaksi</h3><button onclick="closeModal()" class="text-muted-foreground hover:text-foreground touch-target"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+      <div class="p-4 overflow-y-auto flex-1 space-y-4">
+        <input type="hidden" id="form-id">
+        <div><label class="block text-sm font-medium mb-1">Tanggal</label><input type="date" id="form-tanggal" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+        <div><label class="block text-sm font-medium mb-1">Keterangan</label><input type="text" id="form-keterangan" placeholder="Contoh: Beli perlengkapan" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-sm font-medium mb-1">Kas</label><input type="number" id="form-kas" value="0" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+          <div><label class="block text-sm font-medium mb-1">Perlengkapan</label><input type="number" id="form-perlengkapan" value="0" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+          <div><label class="block text-sm font-medium mb-1">Peralatan</label><input type="number" id="form-peralatan" value="0" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+          <div><label class="block text-sm font-medium mb-1">Utang Usaha</label><input type="number" id="form-utang" value="0" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+          <div class="col-span-2"><label class="block text-sm font-medium mb-1">Modal</label><input type="number" id="form-modal" value="0" class="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none"></div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-border flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 rounded-md border border-input bg-background hover:bg-muted text-sm font-medium touch-target">Batal</button>
+        <button onclick="saveTransaksi()" class="px-4 py-2 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium flex items-center gap-2 touch-target"><i data-lucide="save" class="h-4 w-4"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
+    const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+    let chartInstance = null, semuaTransaksi = [];
+
+    const routes = [
+      { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+      { id: 'transaksi', label: 'Transaksi', icon: 'arrow-left-right' },
+      { id: 'laporan', label: 'Laporan', icon: 'file-text' }
+    ];
+
+    function renderNav() {
+      const dNav = document.getElementById('desktop-nav'), mNav = document.getElementById('mobile-nav');
+      const current = location.hash.replace('#', '') || 'dashboard';
+      dNav.innerHTML = ''; mNav.innerHTML = '';
+      routes.forEach(r => {
+        const isActive = current === r.id;
+        dNav.innerHTML += `<a href="#${r.id}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors touch-target ${isActive ? 'bg-sidebar-accent text-sidebar-primary font-semibold' : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'}"><i data-lucide="${r.icon}" class="h-5 w-5"></i> ${r.label}</a>`;
+        mNav.innerHTML += `<a href="#${r.id}" class="flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors touch-target ${isActive ? 'text-primary' : 'text-muted-foreground'}"><i data-lucide="${r.icon}" class="h-5 w-5 ${isActive ? 'stroke-[2.5]' : ''}"></i><span class="text-[10px] font-medium">${r.label}</span></a>`;
+      });
+      lucide.createIcons();
+    }
+
+    window.addEventListener('hashchange', () => {
+      const page = location.hash.replace('#', '') || 'dashboard';
+      document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      document.getElementById('page-title').innerText = routes.find(r => r.id === page)?.label || 'Dashboard';
+      renderNav();
+      if(page === 'dashboard') loadDashboard();
+      if(page === 'transaksi') loadTransaksi();
+      if(page === 'laporan') loadLaporan();
+    });
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      if(location.hash === '' || location.hash === '#dashboard') loadDashboard();
+    }
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+
+    async function loadDashboard() {
+      const data = await (await fetch(`${baseUrl}/ringkasan`)).json();
+      document.getElementById('dash-harta').innerText = formatRp(data.totalHarta);
+      document.getElementById('dash-utang').innerText = formatRp(data.totalUtang);
+      document.getElementById('dash-modal').innerText = formatRp(data.totalModal);
+      document.getElementById('dash-count').innerText = data.jumlahTransaksi;
+      document.getElementById('dash-kas').innerText = formatRp(data.detail.kas);
+      document.getElementById('dash-perlengkapan').innerText = formatRp(data.detail.perlengkapan);
+      document.getElementById('dash-peralatan').innerText = formatRp(data.detail.peralatan);
+      
+      const eqEl = document.getElementById('dash-equation');
+      eqEl.className = `rounded-xl border-2 p-4 flex items-center gap-3 ${data.seimbang ? 'border-success/50 bg-success/10' : 'border-destructive/50 bg-destructive/10'}`;
+      eqEl.innerHTML = `<i data-lucide="${data.seimbang ? 'check-circle' : 'x-circle'}" class="h-8 w-8 ${data.seimbang ? 'text-success' : 'text-destructive'} shrink-0"></i><div><p class="font-semibold text-sm">Persamaan Akuntansi</p><p class="text-xs text-muted-foreground">Harta (${formatRp(data.totalHarta)}) = Utang (${formatRp(data.totalUtang)}) + Modal (${formatRp(data.totalModal)})</p><p class="text-xs font-bold mt-1 ${data.seimbang ? 'text-success' : 'text-destructive'}">${data.seimbang ? '✅ Seimbang' : '❌ Tidak Seimbang'}</p></div>`;
+      lucide.createIcons();
+      renderChart(data.detail);
+    }
+
+    function renderChart(detail) {
+      if (chartInstance) chartInstance.destroy();
+      const ctx = document.getElementById('hartaChart').getContext('2d'), isDark = document.documentElement.classList.contains('dark'), textColor = isDark ? '#f1f5f9' : '#0f172a';
+      chartInstance = new Chart(ctx, {
+        type: 'bar', data: { labels: ['Kas', 'Perlengkapan', 'Peralatan'], datasets: [{ data: [detail.kas, detail.perlengkapan, detail.peralatan], backgroundColor: ['hsl(217, 91%, 50%)', 'hsl(142, 76%, 36%)', 'hsl(38, 92%, 50%)'], borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: textColor, callback: v => `${(v/1000000).toFixed(0)}jt` }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }, x: { ticks: { color: textColor }, grid: { display: false } } } }
+      });
+    }
+
+    const formatJtStr = (val) => {
+      if (!val || val === 0) return `<span class="text-muted-foreground">—</span>`;
+      const isPos = val > 0, num = (Math.abs(val) / 1000000).toFixed(1);
+      return `<span class="font-medium ${isPos ? 'text-success' : 'text-destructive'}">${isPos ? '+' : '-'}${num}jt</span>`;
+    };
+    const getBgClass = (val) => (!val || val === 0) ? 'bg-muted/30' : (val > 0 ? 'bg-success/10' : 'bg-destructive/10');
+
+    async function loadTransaksi() {
+      semuaTransaksi = await (await fetch(`${baseUrl}/transaksi`)).json();
+      const listEl = document.getElementById('transaksi-list');
+      if(semuaTransaksi.length === 0) { listEl.innerHTML = `<p class="text-center text-muted-foreground py-10">Belum ada transaksi</p>`; return; }
+      
+      listEl.innerHTML = semuaTransaksi.map(t => `
+        <div class="bg-card border border-border rounded-xl p-4 shadow-sm">
+          <div class="flex justify-between items-start mb-4">
+            <div><h4 class="font-bold text-base text-foreground">${t.keterangan}</h4><p class="text-xs text-muted-foreground mt-0.5">${t.tanggal}</p></div>
+            <div class="flex gap-2"><button onclick="editTransaksi(${t.id})" class="text-muted-foreground hover:text-primary"><i data-lucide="pencil" class="h-4 w-4"></i></button><button onclick="hapusTransaksi(${t.id})" class="text-muted-foreground hover:text-destructive"><i data-lucide="trash-2" class="h-4 w-4"></i></button></div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+            <div class="rounded-lg py-2 ${getBgClass(t.kas)}"><span class="block text-muted-foreground mb-1">Kas</span>${formatJtStr(t.kas)}</div>
+            <div class="rounded-lg py-2 ${getBgClass(t.perlengkapan)}"><span class="block text-muted-foreground mb-1">Perlengkapan</span>${formatJtStr(t.perlengkapan)}</div>
+            <div class="rounded-lg py-2 ${getBgClass(t.peralatan)}"><span class="block text-muted-foreground mb-1">Peralatan</span>${formatJtStr(t.peralatan)}</div>
+            <div class="rounded-lg py-2 ${getBgClass(t.utangUsaha)}"><span class="block text-muted-foreground mb-1">Utang</span>${formatJtStr(t.utangUsaha)}</div>
+            <div class="rounded-lg py-2 ${getBgClass(t.modal)}"><span class="block text-muted-foreground mb-1">Modal</span>${formatJtStr(t.modal)}</div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openModal() {
+      document.getElementById('form-id').value = ''; document.getElementById('form-tanggal').value = new Date().toISOString().split('T')[0]; document.getElementById('form-keterangan').value = '';
+      ['kas', 'perlengkapan', 'peralatan', 'utang', 'modal'].forEach(id => document.getElementById(`form-${id}`).value = 0);
+      document.getElementById('modal-title').innerText = 'Tambah Transaksi'; document.getElementById('modal-transaksi').classList.remove('hidden');
+    }
+    function closeModal() { document.getElementById('modal-transaksi').classList.add('hidden'); }
+    function editTransaksi(id) {
+      const t = semuaTransaksi.find(x => x.id === id); if(!t) return;
+      document.getElementById('form-id').value = t.id; document.getElementById('form-tanggal').value = t.tanggal; document.getElementById('form-keterangan').value = t.keterangan;
+      ['kas', 'perlengkapan', 'peralatan'].forEach(id => document.getElementById(`form-${id}`).value = t[id]);
+      document.getElementById('form-utang').value = t.utangUsaha; document.getElementById('form-modal').value = t.modal;
+      document.getElementById('modal-title').innerText = 'Edit Transaksi'; document.getElementById('modal-transaksi').classList.remove('hidden');
+    }
+    async function hapusTransaksi(id) { if(confirm("Hapus transaksi?")) { await fetch(`${baseUrl}/transaksi/${id}`, { method: 'DELETE' }); loadTransaksi(); } }
+    async function saveTransaksi() {
+      const id = document.getElementById('form-id').value, payload = { tanggal: document.getElementById('form-tanggal').value, keterangan: document.getElementById('form-keterangan').value, kas: Number(document.getElementById('form-kas').value), perlengkapan: Number(document.getElementById('form-perlengkapan').value), peralatan: Number(document.getElementById('form-peralatan').value), utangUsaha: Number(document.getElementById('form-utang').value), modal: Number(document.getElementById('form-modal').value) };
+      if(!payload.keterangan) return alert("Keterangan wajib diisi!");
+      await fetch(id ? `${baseUrl}/transaksi/${id}` : `${baseUrl}/transaksi`, { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal(); loadTransaksi();
+    }
+
+    async function loadLaporan() {
+      const data = await (await fetch(`${baseUrl}/hitung`)).json(), tbody = document.getElementById('laporan-body'), tfoot = document.getElementById('laporan-footer');
+      const cellVal = (v) => v === 0 ? '<span class="text-muted-foreground">—</span>' : `<span class="font-medium ${v > 0 ? 'text-success' : 'text-destructive'}">${v > 0 ? '+' : ''}${formatRp(v)}</span>`;
+      const cellBal = (v) => `<span class="font-semibold text-xs">${formatRp(v)}</span>`;
+      tbody.innerHTML = data.map((row, idx) => `
+        <tr><td class="p-3 font-medium">${idx + 1}</td><td class="p-3"><p class="font-medium text-xs">${row.transaksi.keterangan}</p><p class="text-[10px] text-muted-foreground">${row.transaksi.tanggal}</p></td><td class="p-3 text-right">${cellVal(row.transaksi.kas)}</td><td class="p-3 text-right">${cellVal(row.transaksi.perlengkapan)}</td><td class="p-3 text-right">${cellVal(row.transaksi.peralatan)}</td><td class="p-3 text-right">${cellVal(row.transaksi.utangUsaha)}</td><td class="p-3 text-right">${cellVal(row.transaksi.modal)}</td></tr>
+        <tr class="bg-muted/30"><td></td><td class="p-3 text-[10px] text-muted-foreground italic">Saldo</td><td class="p-3 text-right">${cellBal(row.spiegel.kas)}</td><td class="p-3 text-right">${cellBal(row.spiegel.perlengkapan)}</td><td class="p-3 text-right">${cellBal(row.spiegel.peralatan)}</td><td class="p-3 text-right">${cellBal(row.spiegel.utangUsaha)}</td><td class="p-3 text-right">${cellBal(row.spiegel.modal)}</td></tr>`).join('');
+      if (data.length > 0) {
+        const last = data[data.length - 1].spiegel, tHarta = last.kas + last.perlengkapan + last.peralatan;
+        tfoot.innerHTML = `<tr><td colspan="2" class="p-3 font-bold">TOTAL</td><td class="p-3 text-right font-bold">${formatRp(last.kas)}</td><td class="p-3 text-right font-bold">${formatRp(last.perlengkapan)}</td><td class="p-3 text-right font-bold">${formatRp(last.peralatan)}</td><td class="p-3 text-right font-bold">${formatRp(last.utangUsaha)}</td><td class="p-3 text-right font-bold">${formatRp(last.modal)}</td></tr><tr><td colspan="2" class="p-3 font-bold text-primary">HARTA = UTANG + MODAL</td><td colspan="3" class="p-3 text-right font-bold text-primary">${formatRp(tHarta)}</td><td colspan="2" class="p-3 text-right font-bold text-primary">${formatRp(last.utangUsaha + last.modal)}</td></tr>`;
+      } else tfoot.innerHTML = '';
+    }
+
+    async function exportJSON() {
+      const t = await (await fetch(`${baseUrl}/transaksi`)).json(), r = await (await fetch(`${baseUrl}/ringkasan`)).json();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ transaksi: t, ringkasan: r }, null, 2)], { type: 'application/json' }));
+      a.download = `akuntansi-lks-${new Date().toISOString().split('T')[0]}.json`; a.click();
+    }
+    async function resetData() { if(confirm("Reset semua data transaksi?")) { await fetch(`${baseUrl}/transaksi/reset`, { method: 'DELETE' }); loadLaporan(); } }
+
+    renderNav(); loadDashboard();
+  </script>
 </body>
 </html>
